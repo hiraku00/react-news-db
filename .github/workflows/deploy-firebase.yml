@@ -9,15 +9,11 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
-      - name: Install Dependencies
+      - name: Build in Docker
         run: |
-          cd app
-          npm ci
-      - name: Build
-        run: |
-          cd app
-          npm run build
+          docker-compose up -d
+          docker exec -it front sh -c "npm ci && npm run build"
+      - name: Copy build artifacts
+        run: docker cp front:/app/dist ./dist
       - name: Deploy to Firebase
-        run: |
-          cd app
-          npx firebase-tools deploy --only hosting --project react-news-db-7c0b7 --token ${{ secrets.FIREBASE_TOKEN }}
+        run: npx firebase-tools deploy --only hosting --project react-news-db-7c0b7 --token ${{ secrets.FIREBASE_TOKEN }}
