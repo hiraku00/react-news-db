@@ -12,8 +12,8 @@ jobs:
       - name: Build in Docker
         run: |
           docker-compose up -d
-          docker exec -T front sh -c "npm ci"
-          docker exec -T front sh -c "npm run build"
+          docker exec front sh -c "npm ci"
+          docker exec front sh -c "npm run build"
       - name: Copy build artifacts
         run: docker cp front:/app/dist ./dist
       - name: Deploy to Firebase
